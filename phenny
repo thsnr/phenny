@@ -16,49 +16,53 @@ import imp
 import os
 import os.path
 import sys
-
-from textwrap import dedent as trim
+import textwrap
 
 def check_python_version():
     if sys.version_info < (2, 7):
         sys.exit("error: requires Python 2.7 or later")
 
-def create_default_config(fn):
-    f = open(fn, 'w')
-    print >> f, trim("""\
-    nick = 'phenny'
-    host = 'irc.example.net'
-    channels = ['#example', '#test']
-    owner = 'yournickname'
+def create_default_config(path):
+    with open(path, "w") as f:
+        f.write(textwrap.dedent("""\
+        # Hostname of IRC server to connect to.
+        host = "irc.example.net"
 
-    # password is the NickServ password, serverpass is the server password
-    # password = 'example'
-    # serverpass = 'serverpass'
+        # Server password.
+        #servpass = servpass"
 
-    # These are people who will be able to use admin.py's functions...
-    admins = [owner, 'someoneyoutrust']
-    # But admin.py is disabled by default, as follows:
-    exclude = ['admin']
+        # NickServ password.
+        #password = "password"
 
-    # If you want to enumerate a list of modules rather than disabling
-    # some, use "enable = ['example']", which takes precedent over exclude
-    #
-    # enable = []
+        # Channels to connect to on the server.
+        channels = ["#example", "#test"]
 
-    # Directories to load user modules from
-    # e.g. /path/to/my/modules
-    extra = []
+        # Nickname of the bot.
+        nick = "phenny"
 
-    # Services to load: maps channel names to white or black lists
-    external = {
-       '#liberal': ['!'], # allow all
-       '#conservative': [], # allow none
-       '*': ['!'] # default whitelist, allow all
-    }
+        # Nickname of the owner of the bot.
+        owner = "yournickname"
 
-    # EOF
-    """)
-    f.close()
+        # Nicknames of people allowed to use admin.py's functions.
+        admins = [owner, "someoneyoutrust"]
+
+        # Blacklist of excluded modules.
+        exclude = ["admin"]
+
+        # Whitelist of enabled modules. Takes precedence over "exclude".
+        #enable = []
+
+        # Directories to load user modules from
+        # e.g. /path/to/my/modules
+        extra = []
+
+        # Services to load: maps channel names to white or black lists
+        external = {
+           "#liberal": ["!"], # allow all
+           "#conservative": [], # allow none
+           "*": ["!"] # default whitelist, allow all
+        }
+        """))
 
 def create_default_config_file(path):
     path = os.path.abspath(path)
